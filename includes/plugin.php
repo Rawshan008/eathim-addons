@@ -79,10 +79,10 @@
 
      public function eathim_admin_notice_missing_main_plugin() {
       if ( file_exists( WP_PLUGIN_DIR . '/elementor/elementor.php' ) ) {
-          $notice_title = __( 'Activate Elementor', 'eathim' );
+          $notice_title = __( 'Activate Elementor', 'eathim-addons' );
           $notice_url = wp_nonce_url( 'plugins.php?action=activate&plugin=elementor/elementor.php&plugin_status=all&paged=1', 'activate-plugin_elementor/elementor.php' );
       }else{
-          $notice_title = __( 'Install Elementor', 'eathim' );
+          $notice_title = __( 'Install Elementor', 'eathim-addons' );
           $notice_url = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=elementor' ), 'install-plugin_elementor' );
       }
 
@@ -90,8 +90,8 @@
 
       $message = sprintf(
         /* translators: 1: Plugin name 2: Elementor 3: Elementor installation Link */
-        esc_html__( '%1$s %2$s', 'eathim' ),
-        '<p>' . esc_html__( 'Ops! Eathim Plugin is not Work Because you need Elementor Plugins install', 'eathim' ) . '</p>',
+        esc_html__( '%1$s %2$s', 'eathim-addons' ),
+        '<p>' . esc_html__( 'Ops! Eathim Plugin is not Work Because you need Elementor Plugins install', 'eathim-addons' ) . '</p>',
         '<p><a class="button-primary block" href="' . esc_url( $notice_url ) . '">' . $notice_title . '</a></p>'
       );
   
@@ -108,9 +108,9 @@
 
       $message = sprintf(
         /* translators: 1: Plugin name 2: Elementor 3: Required Elementor version */
-        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'eathim' ),
-        '<strong>' . esc_html__( 'Eathim Addons', 'eathim' ) . '</strong>',
-        '<strong>' . esc_html__( 'Elementor', 'eathim' ) . '</strong>',
+        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'eathim-addons' ),
+        '<strong>' . esc_html__( 'Eathim Addons', 'eathim-addons' ) . '</strong>',
+        '<strong>' . esc_html__( 'Elementor', 'eathim-addons' ) . '</strong>',
         self::MINIMUM_ELEMENTOR_VERSION
       );
 
@@ -127,9 +127,9 @@
   
       $message = sprintf(
         /* translators: 1: Plugin name 2: PHP 3: Required PHP version */
-        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'elementor-test-addon' ),
-        '<strong>' . esc_html__( 'Elementor Test Addon', 'elementor-test-addon' ) . '</strong>',
-        '<strong>' . esc_html__( 'PHP', 'elementor-test-addon' ) . '</strong>',
+        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'eathim-addons' ),
+        '<strong>' . esc_html__( 'Elementor Test Addon', 'eathim-addons' ) . '</strong>',
+        '<strong>' . esc_html__( 'PHP', 'eathim-addons' ) . '</strong>',
          self::MINIMUM_PHP_VERSION
       );
   
@@ -142,12 +142,54 @@
       * Init Methos
       */
     public function init() {
-      add_action( 'wp_enqueue_scripts', [ $this, 'eathim_enqueue_scripts' ] );
       add_action( 'elementor/widgets/register', [ $this, 'register_widgets' ] );
+      add_action( 'elementor/elements/categories_registered', [ $this, 'eathim_elementor_widget_categories' ] );
+      add_action( 'elementor/frontend/after_register_scripts', [ $this, 'eathim_enqueue_scripts' ] );
+      add_action( 'elementor/frontend/after_enqueue_styles', [ $this, 'eathim_enqueue_styles' ] );
     }
 
+    /**
+     * Elementor Category Register
+     */
+    public function eathim_elementor_widget_categories($elements_manager) {
+      $elements_manager->add_category(
+        'eathim-addons',
+        [
+          'title' => esc_html__( 'Eathim Addons', 'eathim-addons' ),
+          'icon' => 'fa fa-plug',
+        ]
+      );
+    }
+
+  /**
+   * Enqueue Script
+   */
     public function eathim_enqueue_scripts() {
+      /**
+       * Lib files
+       */
+      wp_register_script( 'justifiedGallery', EATHIM_ADDONS_ASSETS .'lib/justifiedGallery/js/jquery.justifiedGallery.min.js', ['jquery'], EATHIM_ADDONS_VERSION, true );
+      wp_register_script( 'eathim-justified-gallery', EATHIM_ADDONS_ASSETS .'js/eathim-justified-gallery.js', ['jquery'], time(), true );
+
+      /**
+       * Custom Files
+       */
       wp_register_script( 'eathim-image-slider', EATHIM_ADDONS_ASSETS .'js/eathim-image-slider.js' );
+    }
+
+    /**
+     * Addons Style
+     */
+    public function eathim_enqueue_styles() {
+      /**
+       * Lib CSS
+       */
+      wp_register_style('justifiedGallery', EATHIM_ADDONS_ASSETS .'lib/justifiedGallery/css/justifiedGallery.min.css' );
+
+      /**
+       * Custom CSS
+       */
+
     }
 
     /**
@@ -156,8 +198,10 @@
     public function register_widgets( $widgets_manager ) {
 
       require_once( __DIR__ . '/widgets/eathim-image-slider-widget.php' );
+      require_once( __DIR__ . '/widgets/eathim-justified-gallery-widget.php' );
   
-      $widgets_manager->register( new \Eathim_Image_Slider_Widget() );
+      $widgets_manager->register( new \Eathim_Image_Slider\Eathim_Image_Slider_Widget() );
+      $widgets_manager->register( new \Eathim_Justified_Gallery\Eathim_Justified_Gallery_Widget() );
   
     }
 
