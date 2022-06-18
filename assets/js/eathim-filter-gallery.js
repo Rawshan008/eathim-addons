@@ -7,10 +7,13 @@
       return;
     }
 
+  
     var $galleryContainer = $fiestar.find(".filter-gallery-content");
     var $settings = $fiestar.data('settings');
     var $filterMenu = $fiestar.find('.filter-gallery-filter');
+
   
+    
 
     initGallery();
       async function initGallery() {
@@ -29,9 +32,6 @@
           $galleryContainer.isotope({ filter: filterValue });
         });
     };
-
-    
-
   };
 
 

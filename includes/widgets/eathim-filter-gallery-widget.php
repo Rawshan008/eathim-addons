@@ -155,11 +155,11 @@ use Elementor\Controls_Manager;
 					5 => __( '5 Columns', 'eathim-addons' ),
 					6 => __( '6 Columns', 'eathim-addons' ),
 				],
-				'default' => 2,
         'selectors' => [
 					'{{WRAPPER}} .filter-gallery-single-item' => '--image-grid-column: {{VALUE}};',
 				],
         'style_transfer' => true,
+        'render_type' => 'template'
 			]
 		);
 
@@ -174,6 +174,7 @@ use Elementor\Controls_Manager;
           'equal' => __('Equal Height', 'eathim-addons'),
         ],
 				'default' => 'masonry',
+        'frontend_available' => true,
 			]
 		);
 
@@ -193,7 +194,8 @@ use Elementor\Controls_Manager;
 				],
         'condition' => [
 					'layout' => 'equal',
-				]
+				],
+        'render_type' => 'template'
 			]
 		);
 
