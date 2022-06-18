@@ -99,6 +99,14 @@ use Elementor\Controls_Manager;
     $repeater = new Repeater();
 
     $repeater->add_control(
+			'filter_menu',
+			[
+				'type' => Controls_Manager::TEXT,
+				'label' => esc_html__( 'Filter Text', 'eathim-addons' ),
+			]
+		);
+
+    $repeater->add_control(
 			'image',
 			[
 				'type' => Controls_Manager::MEDIA,
@@ -109,21 +117,12 @@ use Elementor\Controls_Manager;
 			]
 		);
 
-    $repeater->add_control(
-			'caption',
-			[
-				'type' => Controls_Manager::TEXTAREA,
-				'label' => esc_html__( 'Caption', 'eathim-addons' ),
-			]
-		);
-
     $this->add_control(
 			'images',
 			[
 				'label' => esc_html__( 'Images', 'eathim-addons' ),
 				'type' => Controls_Manager::REPEATER,
 				'fields' => $repeater->get_controls(),
-				'title_field' => '{{{ caption }}}',
 			]
 		);
     
@@ -142,19 +141,7 @@ use Elementor\Controls_Manager;
 			]
 		);
 
-    
-    $this->add_control(
-			'layout',
-			[
-				'label' => esc_html__( 'Masonry?', 'eathim-addons' ),
-				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'eathim-addons' ),
-				'label_off' => esc_html__( 'NO', 'eathim-addons' ),
-				'return_value' => 'yes',
-				'default' => 'yes',
-			]
-		);
-
+  
     $this->add_control(
 			'column',
 			[
@@ -176,6 +163,41 @@ use Elementor\Controls_Manager;
 			]
 		);
 
+    $this->add_control(
+			'layout',
+			[
+				'label' => esc_html__( 'Masonry?', 'eathim-addons' ),
+				'type' => Controls_Manager::SELECT,
+				'options' => [
+          'masonry' => __('Masonry', 'eathim-addons'),
+          'fitRows' => __('fitRows', 'eathim-addons'),
+          'equal' => __('Equal Height', 'eathim-addons'),
+        ],
+				'default' => 'masonry',
+			]
+		);
+
+    $this->add_control(
+			'image_height',
+			[
+				'label' => esc_html__( 'Image Height', 'plugin-name' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [
+					'px' => [
+						'min' => 100,
+						'max' => 1000
+					]
+				],
+        'selectors' => [
+					'{{WRAPPER}} .filter-gallery-single-item img' => 'height: {{SIZE}}{{UNIT}}',
+				],
+        'condition' => [
+					'layout' => 'equal',
+				]
+			]
+		);
+
+
     $this->end_controls_section();
   }
 
@@ -193,7 +215,7 @@ use Elementor\Controls_Manager;
       'eathim-gallery' => [
         'data-settings' => [
           wp_json_encode(array_filter([
-            "layout" => ('yes' == $settings['layout']) ? "masonry" : "",
+            "layoutMode" => ('equal' == $settings['layout']) ? "masonry" : $settings['layout'],
           ]))
         ]
       ]
@@ -202,11 +224,24 @@ use Elementor\Controls_Manager;
 
     ?>
       <div <?php $this->print_render_attribute_string( 'eathim-gallery' ); ?>>
+        <div class="filter-gallery-filter">
+          <?php 
+            $filters = [];
+            foreach($images as $image) {
+              $filters[] = strtolower($image['filter_menu']);
+            }
+          ?>
+          <button data-filter="*">All</button>
+         <?php  
+            foreach(array_unique($filters) as $filter):
+          ?>
+         <button data-filter=".eathim-filter-<?php echo esc_attr($filter)?>"><?php echo esc_html($filter) ?></button>
+         <?php endforeach; ?>
+        </div>
         <div class="filter-gallery-content filter-gallery-content-<?php echo $this->get_id();?>">
-          <?php foreach($images as $image):?>
-          <a href="<?php echo esc_url($image['image']['url']);?>" class="filter-gallery-single-item">
-              <img alt="<?php echo esc_attr($image['caption'])?>" src="<?php echo esc_url($image['image']['url']);?>"/>
-              <div class="jg-caption"><?php echo esc_html($image['caption'], 'eathim-addons') ?></div>
+          <?php foreach($images as $image): ?>
+          <a href="<?php echo esc_url($image['image']['url']);?>" class="filter-gallery-single-item eathim-filter-<?php echo esc_attr(strtolower($image['filter_menu']))?>">
+              <img alt="" src="<?php echo esc_url($image['image']['url']);?>"/>
           </a>
           <?php endforeach; ?>
         </div>

@@ -9,6 +9,7 @@
 
     var $galleryContainer = $fiestar.find(".filter-gallery-content");
     var $settings = $fiestar.data('settings');
+    var $filterMenu = $fiestar.find('.filter-gallery-filter');
   
 
     initGallery();
@@ -21,6 +22,11 @@
           gallery:{
             enabled:true
           }
+        });
+
+        await $filterMenu.on("click", "button", function() {
+          var filterValue = $(this).attr('data-filter');
+          $galleryContainer.isotope({ filter: filterValue });
         });
     };
 
