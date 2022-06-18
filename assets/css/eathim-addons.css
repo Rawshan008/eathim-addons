@@ -1,0 +1,21 @@
+:root {
+  --image-grid-column: 3;
+}
+
+.filter-gallery-single-item {
+  display: block;
+  float: left;
+  overflow: hidden;
+  width:calc(100%/var(--image-grid-column, 4));
+  border: 10px solid transparent;
+}
+
+.filter-gallery-single-item  img {
+  display: block;
+  width: 100%;
+  border-radius: inherit;
+  -webkit-transition: all .25s;
+  transition: all .25s;
+  -o-object-fit: cover;
+  object-fit: cover;
+}

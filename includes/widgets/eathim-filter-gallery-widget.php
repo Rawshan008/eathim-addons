@@ -1,5 +1,5 @@
 <?php
-namespace Eathim_Justified_Gallery;
+namespace Eathim_Filter_Gallery;
 
 /**
  * Elementor Nameshpach
@@ -11,7 +11,7 @@ use Elementor\Controls_Manager;
 /**
  * Eathim Image Slider
  */
-  class Eathim_Justified_Gallery_Widget extends \Elementor\Widget_Base{
+  class Eathim_Filter_Gallery_Widget extends \Elementor\Widget_Base{
 
     /**
      * Get widget name.
@@ -19,7 +19,7 @@ use Elementor\Controls_Manager;
      * @return void
      */
     public function get_name() {
-      return 'eathim-addons-justified-gallery-widgets';
+      return 'eathim-addons-filter-gallery-widgets';
     }
 
     /**
@@ -28,7 +28,7 @@ use Elementor\Controls_Manager;
      * @return void
      */
     public function get_title() {
-      return esc_html__( 'Justified Gallery', 'eathim-addons' );
+      return esc_html__( 'Filter Gallery', 'eathim-addons' );
     }
 
     /**
@@ -55,7 +55,7 @@ use Elementor\Controls_Manager;
      * @return void
      */
     public function get_style_depends() {
-      return ['justifiedGallery', 'magnific-popup'];
+      return ['magnific-popup'];
     }
 
     /**
@@ -64,7 +64,7 @@ use Elementor\Controls_Manager;
      * @return void
      */
     public function get_script_depends() {
-      return ['justifiedGallery', 'magnific-popup', 'eathim-justified-gallery'];
+      return ['isotope', 'magnific-popup', 'eathim-filter-gallery'];
     }
 
     /**
@@ -142,20 +142,37 @@ use Elementor\Controls_Manager;
 			]
 		);
 
+    
     $this->add_control(
-			'rowHeight',
+			'layout',
 			[
-				'label' => esc_html__( 'Height ', 'eathim-addons' ),
-				'type' => Controls_Manager::NUMBER,
-				'default' => 150
+				'label' => esc_html__( 'Masonry?', 'eathim-addons' ),
+				'type' => Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Yes', 'eathim-addons' ),
+				'label_off' => esc_html__( 'NO', 'eathim-addons' ),
+				'return_value' => 'yes',
+				'default' => 'yes',
 			]
 		);
+
     $this->add_control(
-			'margins',
+			'column',
 			[
-				'label' => esc_html__( 'Margin', 'eathim-addons' ),
-				'type' => Controls_Manager::NUMBER,
-				'default' => 10
+				'label' => esc_html__( 'column', 'eathim-addons' ),
+				'type' => Controls_Manager::SELECT,
+        'options' => [
+					1 => __( '1 Column', 'eathim-addons' ),
+					2 => __( '2 Columns', 'eathim-addons' ),
+					3 => __( '3 Columns', 'eathim-addons' ),
+					4 => __( '4 Columns', 'eathim-addons' ),
+					5 => __( '5 Columns', 'eathim-addons' ),
+					6 => __( '6 Columns', 'eathim-addons' ),
+				],
+				'default' => 2,
+        'selectors' => [
+					'{{WRAPPER}} .filter-gallery-single-item' => '--image-grid-column: {{VALUE}};',
+				],
+        'style_transfer' => true,
 			]
 		);
 
@@ -170,15 +187,13 @@ use Elementor\Controls_Manager;
 
     $images = $settings['images'];
 
-    $this->add_render_attribute( 'eathim-gallery', 'class', [ 'eathim-gallery'] );
+    $this->add_render_attribute( 'eathim-gallery', 'class', [ 'filter-eathim-gallery'] );
 
     $this->add_render_attribute([
       'eathim-gallery' => [
         'data-settings' => [
           wp_json_encode(array_filter([
-            "margins" => isset($settings['margins']) ? (int) $settings['margins'] : 10,
-            "rowHeight" => isset($settings['rowHeight']) ? (int) $settings['rowHeight'] : 150,
-            "rel" => 'gallery1',
+            "layout" => ('yes' == $settings['layout']) ? "masonry" : "",
           ]))
         ]
       ]
@@ -187,9 +202,9 @@ use Elementor\Controls_Manager;
 
     ?>
       <div <?php $this->print_render_attribute_string( 'eathim-gallery' ); ?>>
-        <div class="gallery-content">
+        <div class="filter-gallery-content filter-gallery-content-<?php echo $this->get_id();?>">
           <?php foreach($images as $image):?>
-          <a href="<?php echo esc_url($image['image']['url']);?>" class="gallery-single-item">
+          <a href="<?php echo esc_url($image['image']['url']);?>" class="filter-gallery-single-item">
               <img alt="<?php echo esc_attr($image['caption'])?>" src="<?php echo esc_url($image['image']['url']);?>"/>
               <div class="jg-caption"><?php echo esc_html($image['caption'], 'eathim-addons') ?></div>
           </a>
@@ -197,6 +212,10 @@ use Elementor\Controls_Manager;
         </div>
       </div>
     <?php
+
+      if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) :
+        printf( '<script>jQuery(".filter-gallery-content-%s").isotope();</script>', $this->get_id() );
+      endif;
   }
 
 }

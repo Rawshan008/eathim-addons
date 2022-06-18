@@ -169,12 +169,16 @@
        * Lib files
        */
       wp_register_script( 'justifiedGallery', EATHIM_ADDONS_ASSETS .'lib/justifiedGallery/js/jquery.justifiedGallery.min.js', ['jquery'], EATHIM_ADDONS_VERSION, true );
-      wp_register_script( 'eathim-justified-gallery', EATHIM_ADDONS_ASSETS .'js/eathim-justified-gallery.js', ['jquery'], time(), true );
+      wp_register_script( 'isotope', EATHIM_ADDONS_ASSETS .'lib/isotope/js/isotope.pkgd.min.js', ['jquery'], EATHIM_ADDONS_VERSION, true );
+      wp_register_script( 'magnific-popup', EATHIM_ADDONS_ASSETS .'lib/magnificPopup/js/jquery.magnific-popup.min.js', ['jquery'], EATHIM_ADDONS_VERSION, true );
+      
 
       /**
        * Custom Files
        */
       wp_register_script( 'eathim-image-slider', EATHIM_ADDONS_ASSETS .'js/eathim-image-slider.js' );
+      wp_register_script( 'eathim-justified-gallery', EATHIM_ADDONS_ASSETS .'js/eathim-justified-gallery.js', ['jquery'], time(), true );
+      wp_register_script( 'eathim-filter-gallery', EATHIM_ADDONS_ASSETS .'js/eathim-filter-gallery.js', ['jquery'], time(), true );
     }
 
     /**
@@ -184,7 +188,9 @@
       /**
        * Lib CSS
        */
+      wp_enqueue_style('eathim-addons', EATHIM_ADDONS_ASSETS .'css/eathim-addons.css' );
       wp_register_style('justifiedGallery', EATHIM_ADDONS_ASSETS .'lib/justifiedGallery/css/justifiedGallery.min.css' );
+      wp_register_style('magnific-popup', EATHIM_ADDONS_ASSETS .'lib/magnificPopup/css/magnific-popup.css' );
 
       /**
        * Custom CSS
@@ -199,9 +205,11 @@
 
       require_once( __DIR__ . '/widgets/eathim-image-slider-widget.php' );
       require_once( __DIR__ . '/widgets/eathim-justified-gallery-widget.php' );
+      require_once( __DIR__ . '/widgets/eathim-filter-gallery-widget.php' );
   
       $widgets_manager->register( new \Eathim_Image_Slider\Eathim_Image_Slider_Widget() );
       $widgets_manager->register( new \Eathim_Justified_Gallery\Eathim_Justified_Gallery_Widget() );
+      $widgets_manager->register( new \Eathim_Filter_Gallery\Eathim_Filter_Gallery_Widget() );
   
     }
 
