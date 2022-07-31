@@ -191,10 +191,11 @@
       wp_enqueue_style('eathim-addons', EATHIM_ADDONS_ASSETS .'css/eathim-addons.css' );
       wp_register_style('justifiedGallery', EATHIM_ADDONS_ASSETS .'lib/justifiedGallery/css/justifiedGallery.min.css' );
       wp_register_style('magnific-popup', EATHIM_ADDONS_ASSETS .'lib/magnificPopup/css/magnific-popup.css' );
-
+      
       /**
        * Custom CSS
        */
+      wp_register_style('eathim-service-card', EATHIM_ADDONS_ASSETS .'css/eathim-service-card.css' );
 
     }
 
@@ -206,10 +207,12 @@
       require_once( __DIR__ . '/widgets/eathim-image-slider-widget.php' );
       require_once( __DIR__ . '/widgets/eathim-justified-gallery-widget.php' );
       require_once( __DIR__ . '/widgets/eathim-filter-gallery-widget.php' );
+      require_once( __DIR__ . '/widgets/eathim-service-card.php' );
   
       $widgets_manager->register( new \Eathim_Image_Slider\Eathim_Image_Slider_Widget() );
       $widgets_manager->register( new \Eathim_Justified_Gallery\Eathim_Justified_Gallery_Widget() );
       $widgets_manager->register( new \Eathim_Filter_Gallery\Eathim_Filter_Gallery_Widget() );
+      $widgets_manager->register( new \Eathim_Service_Icon\Eathim_Service_Card() );
   
     }
 
