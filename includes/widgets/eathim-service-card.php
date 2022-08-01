@@ -153,18 +153,6 @@ use Elementor\Controls_Manager;
 			]
 		);
 
-    $this->add_control(
-			'button_icon',
-			[
-				'label' => esc_html__( 'Button Icon', 'eathim-addons' ),
-				'type' => Controls_Manager::ICONS,
-        'default' => [
-          'value' => 'fas fa-long-arrow-alt-right',
-          'library' => 'solid',
-        ],
-			]
-		);
-
     
 
     $this->end_controls_section();
@@ -191,12 +179,15 @@ use Elementor\Controls_Manager;
 			]
 		);
 
-    $this->add_group_control(
-			\Elementor\Group_Control_Border::get_type(),
+		$this->add_control(
+			'card_box_bg',
 			[
-				'name' => 'card_box_border',
-				'label' => esc_html__( 'Border', 'eathim-addons' ),
-				'selector' => '{{WRAPPER}} .service-card-wrapper',
+				'label' => esc_html__( 'Card Box', 'eathim-addons' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#fff',
+				'selectors' => [
+					'{{WRAPPER}} .service-card-wrapper' => 'background-color: {{VALUE}}',
+				],
 			]
 		);
 
@@ -280,11 +271,23 @@ use Elementor\Controls_Manager;
     $this->add_control(
 			'icon_color',
 			[
-				'label' => esc_html__( 'icon Color', 'eathim-addons' ),
+				'label' => esc_html__( 'Icon Color', 'eathim-addons' ),
 				'type' => \Elementor\Controls_Manager::COLOR,
-        'default' => '#ffffff',
+        'default' => '#333',
 				'selectors' => [
 					'{{WRAPPER}} .service-card-icon' => 'color: {{VALUE}}',
+				],
+			]
+		);
+
+		$this->add_control(
+			'icon_bg_color',
+			[
+				'label' => esc_html__( 'Icon BG Color', 'eathim-addons' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#ddd',
+				'selectors' => [
+					'{{WRAPPER}} .service-card-icon' => 'background-color: {{VALUE}}',
 				],
 			]
 		);
@@ -349,6 +352,69 @@ use Elementor\Controls_Manager;
 			]
 		);
 
+		$this->add_control(
+			'button_style',
+			[
+				'label' => esc_html__( 'Description', 'eathim-addons' ),
+				'type' => \Elementor\Controls_Manager::HEADING,
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[
+				'name' => 'button_typography',
+				'label' => esc_html__('Typography', 'eathim-addons'),
+				'selector' => '{{WRAPPER}} .service-card-btn',
+			]
+		);
+
+		$this->add_control(
+			'button_color',
+			[
+				'label' => esc_html__( 'Color', 'eathim-addons' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#333',
+				'selectors' => [
+					'{{WRAPPER}} .service-card-btn' => 'color: {{VALUE}}',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Border::get_type(),
+			[
+				'name' => 'button_border',
+				'label' => esc_html__( 'Border', 'eathim-addons' ),
+				'selector' => '{{WRAPPER}} .service-card-btn',
+			]
+		);
+
+		$this->add_control(
+			'button_hover_color',
+			[
+				'label' => esc_html__( 'Hover Color', 'eathim-addons' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#333',
+				'selectors' => [
+					'{{WRAPPER}} .service-card-btn:hover' => 'color: {{VALUE}}',
+				],
+			]
+		);
+
+		$this->add_control(
+			'button_hover_bg_color',
+			[
+				'label' => esc_html__( 'Hover Bg Color', 'eathim-addons' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#ddd',
+				'selectors' => [
+					'{{WRAPPER}} .service-card-btn:hover' => 'background-color: {{VALUE}}',
+				],
+			]
+		);
+
     $this->end_controls_section();
   }
 
@@ -363,7 +429,6 @@ use Elementor\Controls_Manager;
     $description = $settings['description'];
     $button_text = $settings['button_text'];
     $button_url = $settings['button_url'];
-    $button_icon = $settings['button_icon'];
 
     if ( ! empty( $button_url['url'] ) ) {
 			$this->add_link_attributes( 'button_url', $button_url );
@@ -387,10 +452,11 @@ use Elementor\Controls_Manager;
           <p><?php echo esc_html($description); ?></p>
         <?php endif; ?>
 
-        <?php if(!empty($button_text)): ?>
-          <a <?php echo $this->get_render_attribute_string( 'button_url' ); ?>><?php echo esc_html($button_text); ?> <?php \Elementor\Icons_Manager::render_icon( $button_icon, [ 'aria-hidden' => 'true' ] ); ?></a>
-        <?php endif; ?>
       </div>
+
+			<?php if(!empty($button_text)): ?>
+          <a class="service-card-btn" <?php echo $this->get_render_attribute_string( 'button_url' ); ?>><?php echo esc_html($button_text); ?></a>
+        <?php endif; ?>
     </div>
 
     <?php 
