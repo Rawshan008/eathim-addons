@@ -208,11 +208,13 @@
       require_once( __DIR__ . '/widgets/eathim-justified-gallery-widget.php' );
       require_once( __DIR__ . '/widgets/eathim-filter-gallery-widget.php' );
       require_once( __DIR__ . '/widgets/eathim-service-card.php' );
+      require_once( __DIR__ . '/widgets/eathim-counter.php' );
   
       $widgets_manager->register( new \Eathim_Image_Slider\Eathim_Image_Slider_Widget() );
       $widgets_manager->register( new \Eathim_Justified_Gallery\Eathim_Justified_Gallery_Widget() );
       $widgets_manager->register( new \Eathim_Filter_Gallery\Eathim_Filter_Gallery_Widget() );
       $widgets_manager->register( new \Eathim_Service_Icon\Eathim_Service_Card() );
+      $widgets_manager->register( new \Eathim_Counter\Eathim_Counter() );
   
     }
 
